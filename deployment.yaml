@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: task-k8s
+    labels:
+        app: task-k8s
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: task-k8s
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                app: task-k8s
+                tier: task-k8s
+        spec:
+            containers:
+            - name: task-k8s
+              image: moobbie/task-k8s
+              imagePullPolicy: Always
+              ports:
+              - containerPort: 8081
+                name: task-k8s
