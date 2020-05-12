@@ -24,12 +24,12 @@ podTemplate(label: label, containers: [
         )
     ]
 ) {
-    registry = "ivelia/jenkins-k8s"
-    registryCredential = "ivelia"
+    registry = "moobbie/task-k8s"
+    registryCredential = "dockerhub"
     dockerImage = ''
     node(label) {
         stage('Build Docker image and push to docker registry') {
-            git 'https://github.com/Nkoli/jenkins-kubernetes-deployment.git'
+            git 'https://github.com/Moobbie/task-k8s.git'
             container('docker') {
                 script {
                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
@@ -42,7 +42,7 @@ podTemplate(label: label, containers: [
 
         stage('Kubernetes Deployment') {
             container('kubectl') {
-                sh "sed -i 's/image:\\s*ivelia\\/jenkins-k8s/image: ivelia\\/jenkins-k8s:${BUILD_NUMBER}/g' ${WORKSPACE}/deployment.yaml"
+                sh "sed -i 's/image:\\s*moobbie\\/task-k8s/image: moobbie\\/task-k8s:${BUILD_NUMBER}/g' ${WORKSPACE}/deployment.yaml"
                  sh "kubectl apply -f ${WORKSPACE}/deployment.yaml"
                  sh "kubectl apply -f service.yaml"
             }
