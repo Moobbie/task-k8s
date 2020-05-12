@@ -43,8 +43,7 @@ podTemplate(label: label, containers: [
         stage('Kubernetes Deployment') {
             container('kubectl') {
                 sh "sed -i 's/image:\\s*moobbie\\/task-k8s/image: moobbie\\/task-k8s:${BUILD_NUMBER}/g' ${WORKSPACE}/deployment.yaml"
-                 sh "kubectl apply -f ${WORKSPACE}/deployment.yaml"
-                 sh "kubectl apply -f service.yaml"
+                 step([$class: 'KubernetesEngineBuilder', projectId: 'named-berm-276312', clusterName: 'jenkins-cd', location: 'us-east1-d', manifestPattern: 'deployment.yaml', credentialsId: 'named-berm-276312', verifyDeployments: true])
             }
         }
     }
